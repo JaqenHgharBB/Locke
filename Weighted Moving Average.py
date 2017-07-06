@@ -1,4 +1,4 @@
-#Simple Moving Average
+#Weighted Moving Average
 
 import random
 import numpy as np
@@ -21,24 +21,28 @@ def serie (n):
     for x in range (n):
         s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)]
     return s
+    
+### All the code above is universal to all of the models 
 
-### All the code above is universal to all of the models    
-
-def SMA (serie, n): 
+def WMA (serie, n): 
     # n is range of the moving average
-    # This function smooths a set of data points with a simple moving average
+    # This function smooths a set of data points with a weighted moving average
     s=[serie[0]]*(n-1)
     s=s+serie
     smoothed=[]
     for x in range (len(s)-n):
-        smoothed += [np.mean(s[x:x+(n)])]
+        smoothrange=s[x:x+n]
+        smooth = 0
+        for y in range (n):
+            smooth += (y+1)*smoothrange[y]
+        smoothed+=[smooth/(0.5*n*(n+1))]
     return smoothed
-
+    
 series1 = serienoise(60) 
 #This defines a serie length 60 with noise included
 series2 = serie(60)
 
-smoothed = SMA(series1,10)
+smoothed = WMA(series1,10)
 #this then smooths that series
 
 ###
