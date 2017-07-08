@@ -52,7 +52,7 @@ def kfilter (x,p,sys, data):
 def KF (serie):
     a=np.matrix('1,0;0,1')
     h=np.matrix('1.0,0;0,1.0')
-    q=np.matrix('0.05,0;0,0.05') 
+    q=np.matrix('0.1,0;0,0.1') 
     r=np.matrix('0.9,0;0,0.9')
     sys=(a,h,q,r)
     smoothed = kfilter(serie[0],1,sys,serie)
