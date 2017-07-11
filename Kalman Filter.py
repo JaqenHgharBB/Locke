@@ -11,7 +11,7 @@ def serienoise (n):
     # This function creates a series based on a cubic with added noise
     s=[]
     for x in range (n):
-        s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)+random.randint(-100,100)/50]
+        s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)+random.randint(-100,100)/25]
     return s
     
 def serie (n): 
@@ -52,7 +52,7 @@ def kfilter (x,p,sys, data):
 def KF (serie):
     a=np.matrix('1,0;0,1')
     h=np.matrix('1.0,0;0,1.0')
-    q=np.matrix('0.1,0;0,0.1') 
+    q=np.matrix('0.05,0;0,0.05') 
     r=np.matrix('0.9,0;0,0.9')
     sys=(a,h,q,r)
     smoothed = kfilter(serie[0],1,sys,serie)
