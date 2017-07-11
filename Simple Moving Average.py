@@ -11,7 +11,7 @@ def serienoise (n):
     # This function creates a series based on a cubic with added noise
     s=[]
     for x in range (n):
-        s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)+random.randint(-100,100)/50]
+        s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)+random.randint(-100,100)/25]
     return s
     
 def serie (n): 
