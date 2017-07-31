@@ -4,14 +4,14 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-random.seed(1) #For the sake of repeatability, the randomness is seeded, so it is the same each time.
+random.seed(0) #For the sake of repeatability, the randomness is seeded, so it is the same each time.
 
 def serienoise (n): 
     # n is the length of the desired serie
     # This function creates a series based on a cubic with added noise
     s=[]
     for x in range (n):
-        s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)+random.randint(-100,100)/25]
+        s+=[10*(((0.02*x-2)**3)+2*((0.02*x-2)**2)+1)+random.randint(-200,200)/25]
     return s
     
 def serie (n): 
@@ -19,8 +19,16 @@ def serie (n):
     # This function creates a series based on a cubic with added noise
     s=[]
     for x in range (n):
-        s+=[10*(((0.05*x-2)**3)+2*((0.05*x-2)**2)+1)]
+        s+=[10*(((0.02*x-2)**3)+2*((0.02*x-2)**2)+1)]
     return s
+    
+def meansqrdif (serie1, serie2):
+    # Determines the mean squared differnece between two series
+    # takes two series as inputs and returns a float
+    total=0
+    for x in range (len(serie1)-1):
+        total+=(serie1[x]-serie2[x])**2
+    return total/len(serie1)
     
 ### All the code above is universal to all of the models
 
@@ -51,16 +59,16 @@ def kfilter (x,p,sys, data):
 
 def KF (serie):
     a=np.matrix('1,0;0,1')
-    h=np.matrix('1.0,0;0,1.0')
-    q=np.matrix('0.05,0;0,0.05') 
-    r=np.matrix('0.9,0;0,0.9')
+    h=np.matrix('1,0;0,1')
+    q=np.matrix('0.008,0;0,0.008') 
+    r=np.matrix('0.99,0;0,0.99')
     sys=(a,h,q,r)
     smoothed = kfilter(serie[0],1,sys,serie)
     return smoothed
 
-series1 = serienoise(60) 
+series1 = serienoise(150) 
 #This defines a serie length 60 with noise included
-series2 = serie(60)
+series2 = serie(150)
 
 smoothed = KF(series1)
 #this then smooths that series
@@ -73,3 +81,6 @@ plt.legend(plot,['Actual Data','Smoothed Values','True Values'])
 
 plot = plt.plot(series1, 'r-', smoothed, 'b-', series2, 'g--')
 #Plots on the same axes the original and smoothed series      
+
+print(meansqrdif(series2, smoothed))
+#prints the mean squared difference of the smothed series compared to the true value
