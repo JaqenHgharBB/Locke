@@ -28,7 +28,13 @@ def meansqrdif (serie1, serie2):
     total=0
     for x in range (len(serie1)-1):
         total+=(serie1[x]-serie2[x])**2
-    return total/len(serie1)
+    return total/(len(serie1)-1)
+    
+def meansqrdel (serie):
+    total=0
+    for x in range (len(serie)-1):
+        total+=(serie[x]-serie[x+1])**2
+    return total/(len(serie)-1)
     
 ### All the code above is universal to all of the models
 
@@ -57,11 +63,11 @@ def kfilter (x,p,sys, data):
         # if the data being treated were non-scalar, these would have to be removed
     return k
 
-def KF (serie):
+def KF (serie, coeff):
     a=np.matrix('1,0;0,1')
     h=np.matrix('1,0;0,1')
-    q=np.matrix('0.008,0;0,0.008') 
-    r=np.matrix('0.99,0;0,0.99')
+    q=np.matrix([[coeff,0],[0,coeff]]) 
+    r=np.matrix([[1-coeff,0],[0,1-coeff]])
     sys=(a,h,q,r)
     smoothed = kfilter(serie[0],1,sys,serie)
     return smoothed
@@ -70,10 +76,11 @@ series1 = serienoise(150)
 #This defines a serie length 60 with noise included
 series2 = serie(150)
 
-smoothed = KF(series1)
+smoothed = KF(series1, 0.0089)
 #this then smooths that series
 
 ###
+plot=''
 plt.figure(figsize=(10,7.5))
 plt.title('Kalman Filter')
 plt.legend(plot,['Actual Data','Smoothed Values','True Values'])
@@ -82,5 +89,6 @@ plt.legend(plot,['Actual Data','Smoothed Values','True Values'])
 plot = plt.plot(series1, 'r-', smoothed, 'b-', series2, 'g--')
 #Plots on the same axes the original and smoothed series      
 
-print(meansqrdif(series2, smoothed))
+print('Mean square deviation:' + str(meansqrdif(series2, smoothed))[0:5])
+print('Mean square delta:' + str(meansqrdel(smoothed))[0:5])
 #prints the mean squared difference of the smothed series compared to the true value
