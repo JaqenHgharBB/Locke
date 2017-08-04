@@ -28,7 +28,13 @@ def meansqrdif (serie1, serie2):
     total=0
     for x in range (len(serie1)-1):
         total+=(serie1[x]-serie2[x])**2
-    return total/len(serie1)
+    return total/(len(serie1)-1)
+    
+def meansqrdel (serie):
+    total=0
+    for x in range (len(serie)-1):
+        total+=(serie[x]-serie[x+1])**2
+    return total/(len(serie)-1)
 
 ### All the code above is universal to all of the models    
 
@@ -46,10 +52,11 @@ series1 = serienoise(150)
 #This defines a serie length 60 with noise included
 series2 = serie(150)
 
-smoothed = SMA(series1,20)
+smoothed = SMA(series1,6)
 #this then smooths that series
 
 ###
+plot=''
 plt.figure(figsize=(10,7.5))
 plt.title('Simple Moving Average')
 plt.legend(plot,['Actual Data','Smoothed Values','True Values'])
@@ -58,7 +65,6 @@ plt.legend(plot,['Actual Data','Smoothed Values','True Values'])
 plot = plt.plot(series1, 'r-', smoothed, 'b-', series2, 'g--')
 #Plots on the same axes the original and smoothed series      
 
-print(meansqrdif(series2, smoothed))
+print('Mean square deviation:' + str(meansqrdif(series2, smoothed))[0:5])
+print('Mean square delta:' + str(meansqrdel(smoothed))[0:5])
 #prints the mean squared difference of the smothed series compared to the true value
-
-
